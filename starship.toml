@@ -1,1 +1,42 @@
-/home/toth/.config/starship.toml
+add_newline = false
+
+#prompt character
+[character]
+success_symbol = "[\\$](bold green)"
+error_symbol = "[\\$](bold red)"
+
+#command duration
+[cmd_duration]
+disabled = true
+
+# Disable the newline at the start of the prompt
+[line_break]
+disabled = true
+
+[package]
+disabled = true
+
+#username displaying in ssh sessions
+[username]
+format = "[$user]($style)[@](bold green)"
+
+#hostname displaying in ssh sessions
+[hostname]
+format = "[$hostname]($style):"
+trim_at = "-"
+
+#battery stuff
+#[[battery.display]]
+threshold = 25
+style = "bold red"
+
+#java version display
+[java]
+format = "via [${version} ](bold red)"
+
+#python version display
+[python]
+format = "via [${version} ](bold green)"
+
+[git_branch]
+symbol=" "
