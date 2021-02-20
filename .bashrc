@@ -1,3 +1,8 @@
+## Tóth Bálint ##
+    # 2021 #
+
+# my vimrc, with all the extra utilities I use
+
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
@@ -141,7 +146,6 @@ eval "$(starship init bash)"
 #solarized directory colors
 #eval `dircolors /home/toth/.config/gnome-terminal/dircolors`
 
-#include qt to the PATH variable
 
 #adding qt to the path
 export PATH=$PATH:/usr/lib/qt5/bin

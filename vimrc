@@ -1,3 +1,7 @@
+""Tóth Bálint""
+    "2021"
+"vimrc with the plugins I use (with vimplug manager)
+
 "tabs and basic editor setup
 set tabstop=4
 set shiftwidth=4

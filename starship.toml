@@ -1,3 +1,8 @@
+# Tóth Bálint #
+   # 2021 #
+# starship prompt config
+
+#remove the extra line after the prompt
 add_newline = false
 
 #prompt character
