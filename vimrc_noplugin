@@ -1,0 +1,39 @@
+" This is my vimrc without using any plugins
+" can be useful on minimal installs, terminal-only environment
+"
+" Basics - simple vim settings
+set nocompatible
+syntax enable
+filetype plugin on
+set noswapfile
+
+" look and feel settings
+set tabstop=4
+set shiftwidth=4
+set relativenumber number
+set autoindent
+set wildmenu
+colorscheme elflord
+
+" fuzzy file search
+set path=**
+
+" tags for jumping (works only if ctags is installed)
+command! MakeTags !ctags -R .
+
+"netrw setup - the simple file navigation tool
+"remove banner from top
+let g:netrw_banner=0
+"split windows to left by default
+let g:netrw_altv=1
+"folding tree
+let g:netrw_liststyle=0
+"following current directory
+let g:nerw_keepdir=1
+
+" keybindings
+nnoremap <C-o> o<Esc>
+nnoremap <C-g>h :tabprevious<Return>
+nnoremap <C-g>l :tabnext<Return>
+nnoremap <C-g>c :tabclose<Return>
+inoremap jk <Esc>
