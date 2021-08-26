@@ -1,0 +1,218 @@
+#+TITLE: Personal Emacs config based on DT's video
+#+AUTHOR: Tóth Bálint
+
+* Basics
+    Important: you must have this snippet of code in your `init.el'!
+    #+begin_src emacs-lisp
+      (org-babel-load-file
+      (expand-file-name
+	  "config.org"
+	  user-emacs-directory))
+    #+end_src
+
+* Package management
+** MELPA
+  This section is the setup of MELPA for package.el.
+  
+  #+begin_src emacs-lisp
+     (require 'package)
+     (add-to-list 'package-archives
+		  '("melpa" . "https://melpa.org/packages/"))
+     (package-initialize)
+  #+end_src
+** refresh packages
+   #+begin_src emacs-lisp
+     ;; refresh package.el
+     ;; (package-refresh-contents)
+   #+end_src
+** use-package
+  An EMACS plugin for easier package management.
+  From now on, packages can be installed with :
+  #+begin_src emacs-lisp
+    (unless (package-installed-p
+	     'use-package)
+    (package-install 'use-package))
+  #+end_src
+  
+* Evil Mode
+  Setup for evil mode and evil collection so evil keycoords can be used in other plugins
+  #+begin_src emacs-lisp
+     (use-package evil
+		     :ensure t ;install evil if not installed
+		     :init     ;manipulate evil's config
+		     (setq evil-want-integration t)    ;default btw
+		     (setq evil-want-keybinding nil)   
+		     (setq evil-vsplit-window-right t) ; splits
+		     (setq evil-split-window-below t)
+		     (evil-mode))
+    (use-package evil-collection
+		 :after evil
+		 :ensure t
+		 :config
+		 (evil-collection-init))
+  #+end_src
+
+* Look and feel
+** Welcome Screen
+   Turning off the welcome screen
+   #+begin_src emacs-lisp
+     (setq inhibit-startup-screen t)
+   #+end_src
+** Theme
+  The doom emacs's default theme
+  #+begin_src emacs-lisp
+    (use-package doom-themes
+      :ensure t)
+    ;; enable some bold and italic font-faces
+    (setq doom-themes-enable-bold t 
+      doom-themes-enable-italic t)
+    (load-theme 'doom-one t)
+  #+end_src
+
+** Fonts
+  A nice font
+  #+begin_src emacs-lisp
+    (set-face-attribute 'default nil
+	:font "Ubuntu Mono Nerd Font 11"
+	:weight 'medium)
+    (set-face-attribute 'variable-pitch nil
+	:font "Ubuntu 11"
+	:weight 'medium)
+    (set-face-attribute 'fixed-pitch nil
+	:font "Ubuntu Mono NerdFont 11"
+	:weight 'medium)
+
+    (add-to-list 'default-frame-alist '(font . "Ubuntu Mono Nerd Font 11"))
+  #+end_src
+  
+** Bars
+  Disabling the srcoll-, menu-, toolbar
+  #+begin_src emacs-lisp
+    (menu-bar-mode -1)
+    (tool-bar-mode -1)
+    (scroll-bar-mode -1)
+  #+end_src
+** Zoom
+  Keybindings for zooming
+  C-+ zoom in
+  C-- zoom out
+  C-mouseWheel
+  #+begin_src emacs-lisp
+    (global-set-key (kbd "C-+") 'text-scale-increase)
+    (global-set-key (kbd "C--") 'text-scale-decrease)
+    (global-set-key (kbd "<C-wheel-up>") 'text-scale-increase)
+    (global-set-key (kbd "<C-wheel-down>") 'text-scale-decrease)
+  #+end_src
+  
+** Lines
+   Line numbers and line truncation
+   #+begin_src emacs-lisp
+     ;; numbers
+     (global-display-line-numbers-mode)
+   #+end_src
+** Mode line
+   The doom emacs mode line properly stolen
+   #+begin_src emacs-lisp
+	  (use-package doom-modeline
+	    :ensure t)
+          (setq doom-modeline-height 11)
+	  (doom-modeline-mode 1)
+     ;; set the height so it doesn't take up half the screen
+   #+end_src
+** Prettify Symbols
+   Character replacements for some programming languages
+   Hook used at Haskell settings [[*Prettify Symbols hook][here]]
+   #+begin_src emacs-lisp
+     (defun my/interactive-haskell-mode/load-prettify-symbols ()
+       (interactive)
+       (setq prettify-symbols-alist
+		       '(("->" . ?→)
+			("=>" . ?⇒)
+			("<-" . ?←)
+			("/=" . ?≠)
+			("\\" .  ?λ)))
+       (prettify-symbols-mode 1))
+
+   #+end_src
+** Parenthesis
+   Set the parenthesis highlighting to always display.
+   #+begin_src emacs-lisp
+    (show-paren-mode)
+   #+end_src
+* Which key
+  Helper buffer that shows the keybindings
+  #+begin_src emacs-lisp
+    (use-package which-key
+      :ensure t)
+    (which-key-mode)
+  #+end_src
+
+* Neotree
+** All the icons
+   Some nice icons for neotree
+   #+begin_src emacs-lisp
+	  (require 'all-the-icons)
+     (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+   #+end_src
+** Evil keybindings
+   |---------+---------------------|
+   | key     | action              |
+   |---------+---------------------|
+   | "tab"   | enters neotree      |
+   |---------+---------------------|
+   | "space" | quick-look          |
+   |---------+---------------------|
+   | "q"     | hides neotree       |
+   |---------+---------------------|
+   | "A"     | strech              |
+   |---------+---------------------|
+   | "H"     | toggle hidden files |
+   |---------+---------------------|
+   | "g"     | refresh             |
+   |---------+---------------------|
+
+   #+begin_src emacs-lisp
+     (add-hook 'neotree-mode-hook
+			    (lambda ()
+			    (define-key evil-normal-state-local-map (kbd "TAB") 'neotree-enter)
+			    (define-key evil-normal-state-local-map (kbd "SPC") 'neotree-quick-look)
+			    (define-key evil-normal-state-local-map (kbd "q") 'neotree-hide)
+			    (define-key evil-normal-state-local-map (kbd "RET") 'neotree-enter)
+			    (define-key evil-normal-state-local-map (kbd "g") 'neotree-refresh)
+			    (define-key evil-normal-state-local-map (kbd "n") 'neotree-next-line)
+			    (define-key evil-normal-state-local-map (kbd "p") 'neotree-previous-line)
+			    (define-key evil-normal-state-local-map (kbd "A") 'neotree-stretch-toggle)
+			    (define-key evil-normal-state-local-map (kbd "H") 'neotree-hidden-file-toggle)))
+
+
+   #+end_src
+* Haskell mode
+** Prettify Symbols hook
+   Actually using the prettify symbols definitions for haskell
+   #+begin_src emacs-lisp
+     (add-hook 'interactive-haskell-mode-hook 'my/interactive-haskell-mode/load-prettify-symbols)
+   #+end_src
+** Interactive Haskell mode hook
+   Automatically turning on interactive haskell mode upon starting haskell mode
+   #+begin_src emacs-lisp
+     (defun my/haskell-mode/turn-on-interactive ()
+       (interactive-haskell-mode 1))
+     (add-hook 'haskell-mode-hook 'my/haskell-mode/turn-on-interactive)
+   #+end_src
+* Org mode
+** Org-tempo
+   Source code tag expansion
+   #+begin_src emacs-lisp
+        (use-package org-tempo
+        :ensure nil)
+   #+end_src
+** Table of Contents
+   Automatically create the toc
+   #+begin_src emacs-lisp
+     (use-package toc-org
+       :commands toc-org-enable
+       :init (add-hook 'org-mode-hook 'toc-org-enable))
+   #+end_src
+
+   
+   
