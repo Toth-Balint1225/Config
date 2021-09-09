@@ -13,6 +13,8 @@ set shiftwidth=4
 set relativenumber number
 set autoindent
 set wildmenu
+set laststatus=2
+set ruler
 colorscheme elflord
 
 " fuzzy file search

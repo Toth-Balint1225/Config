@@ -1,8 +1,3 @@
-# Tóth Bálint #
-   # 2021 #
-# starship prompt config
-
-#remove the extra line after the prompt
 add_newline = false
 
 #prompt character
@@ -35,6 +30,9 @@ trim_at = "-"
 threshold = 25
 style = "bold red"
 
+[jobs]
+symbol = " "
+#symbol = " "
 #java version display
 [java]
 format = "via [${version} ](bold red)"
@@ -45,3 +43,26 @@ format = "via [${version} ](bold green)"
 
 [git_branch]
 symbol=" "
+
+# custom haskell module
+[custom.haskell]
+shell = ["ghci","--version","|","awk",'-F" "', "{ pint $8 }"]
+symbol = ""
+lambda = "λ"
+format = "[${symbol} 8.0.2 ](blue bold)"
+extensions = ["hs"]
+
+#custom c mode
+[custom.c]
+shell = ["gcc","--version"]
+symbol = ""
+format = "[${symbol} ](bold red)"
+extensions = ["c"]
+
+#custom c++ mode
+[custom.cpp]
+shell = ["g++","--version"]
+symbol = ""
+format = "[${symbol} ](bold red)"
+extensions = ["cpp","h","cxx","hpp","hxx"]
+

@@ -3,13 +3,18 @@
 
 * Basics
     Important: you must have this snippet of code in your `init.el'!
-    #+begin_src emacs-lisp
       (org-babel-load-file
       (expand-file-name
 	  "config.org"
 	  user-emacs-directory))
-    #+end_src
 
+* Autosave
+  #+begin_src emacs-lisp
+    (setq backup-directory-alist
+      `((".*" . ,temporary-file-directory)))
+    (setq auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
+  #+end_src
 * Package management
 ** MELPA
   This section is the setup of MELPA for package.el.
@@ -21,6 +26,7 @@
      (package-initialize)
   #+end_src
 ** refresh packages
+   Commented out for startup speed gain. Sould be turned back on when installing a new plugin.
    #+begin_src emacs-lisp
      ;; refresh package.el
      ;; (package-refresh-contents)
@@ -148,6 +154,11 @@
   #+end_src
 
 * Neotree
+** Set to default directory editor
+   By setting C-x d to neotree-dir form dired, we get a nice graphical thingy.
+   #+begin_src emacs-lisp
+     (global-set-key (kbd "C-x d") 'neotree-dir)
+   #+end_src
 ** All the icons
    Some nice icons for neotree
    #+begin_src emacs-lisp
@@ -214,5 +225,21 @@
        :init (add-hook 'org-mode-hook 'toc-org-enable))
    #+end_src
 
-   
+* Magit
+** Installation
+  The magit interactive git client
+  Using the evil collection keybindings
+  #+begin_src emacs-lisp
+    (use-package magit
+      :ensure t
+      :after evil
+      :init
+      (evil-collection-init))
+  #+end_src
+
+** Custom keybinding setup
+   C-x g is a common way of setting this up, so I use it.
+   #+begin_src emacs-lisp
+     (global-set-key (kbd "C-x g") 'magit-status)
+   #+end_src
    

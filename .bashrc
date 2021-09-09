@@ -1,8 +1,3 @@
-## Tóth Bálint ##
-    # 2021 #
-
-# my vimrc, with all the extra utilities I use
-
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
@@ -131,10 +126,10 @@ alias pm='manager.sh'
 #alias less to coloured
 alias less='less -r'
 
-
 #getting git branch information
 parse_git_branch() {
 	git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/:(\1)/'
+	#alternative: git branch 2> /dev/null | grep "\*" | awk -F" " '{ print $1 }'
 }
 
 #custom prompt showing only the working directory
@@ -146,6 +141,7 @@ eval "$(starship init bash)"
 #solarized directory colors
 #eval `dircolors /home/toth/.config/gnome-terminal/dircolors`
 
+#include qt to the PATH variable
 
 #adding qt to the path
 export PATH=$PATH:/usr/lib/qt5/bin
