@@ -145,6 +145,17 @@
    #+begin_src emacs-lisp
     (show-paren-mode)
    #+end_src
+** Indentation
+   The indentation style of all C related files
+   Convention:
+   - Java style
+   - Tab width is 4
+   - Tabs instead of spaces (no expandtab)
+   #+begin_src emacs-lisp
+     (setq-default c-basic-offset 4
+                   tab-width 4
+                   indent-tabs-mode 4)
+   #+end_src
 * Which key
   Helper buffer that shows the keybindings
   #+begin_src emacs-lisp
