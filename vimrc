@@ -44,14 +44,19 @@ call plug#begin()
 	Plug 'vim-airline/vim-airline'
 	Plug 'dracula/vim',{'as':'dracula'}
 	Plug 'vimwiki/vimwiki'
+	Plug 'tomasiser/vim-code-dark'
+	Plug 'vim-scripts/darktango.vim'
 
 call plug#end()
 
 "colorscheme
-let g:dracula_bold = 1
-let g:dracula_italic = 1
-let g:dracula_colorterm = 0
-colorscheme dracula
+"let g:dracula_bold = 1
+"let g:dracula_italic = 1
+"let g:dracula_colorterm = 0
+"colorscheme dracula
+
+colorscheme codedark
+"colorscheme darktango
 
 "dispatch.vim maps 
 let g:dispatch_no_maps=1
