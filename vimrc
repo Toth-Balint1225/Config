@@ -50,12 +50,12 @@ call plug#begin()
 call plug#end()
 
 "colorscheme
-"let g:dracula_bold = 1
-"let g:dracula_italic = 1
-"let g:dracula_colorterm = 0
-"colorscheme dracula
+let g:dracula_bold = 1
+let g:dracula_italic = 1
+let g:dracula_colorterm = 0
+colorscheme dracula
 
-colorscheme codedark
+"colorscheme codedark
 "colorscheme darktango
 
 "dispatch.vim maps 
