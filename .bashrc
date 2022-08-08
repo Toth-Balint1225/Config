@@ -209,3 +209,7 @@ neofetch
 #|      46      | Cyan               |     |     106      | turquoise          |
 #|      47      | White              |     |     107      | white              |
 #+--------------+--------------------+     +--------------+--------------------+
+. "$HOME/.cargo/env"
+
+# add rustup cargo to the path
+export PATH=$PATH:$HOME/.cargo/bin/

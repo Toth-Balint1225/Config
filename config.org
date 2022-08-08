@@ -28,8 +28,8 @@
 ** refresh packages
    Commented out for startup speed gain. Sould be turned back on when installing a new plugin.
    #+begin_src emacs-lisp
-     ;; refresh package.el
-     ;; (package-refresh-contents)
+	 ;; refresh package.el
+	 (package-refresh-contents)
    #+end_src
 ** use-package
   An EMACS plugin for easier package management.
@@ -44,21 +44,29 @@
 ** Basics
   Setup for evil mode and evil collection so evil keycoords can be used in other plugins
   #+begin_src emacs-lisp
-     (use-package evil
-		     :ensure t ;install evil if not installed
-		     :init     ;manipulate evil's config
-		     (setq evil-want-integration t)    ;default btw
-		     (setq evil-want-keybinding nil)   
-		     (setq evil-vsplit-window-right t) ; splits
-		     (setq evil-split-window-below t)
-		     (evil-mode))
-    (use-package evil-collection
+	 (use-package evil
+			 :ensure t ;install evil if not installed
+			 :init     ;manipulate evil's config
+			 (setq evil-want-integration t)    ;default btw
+			 (setq evil-want-keybinding nil)   
+			 (setq evil-vsplit-window-right t) ; splits
+			 (setq evil-split-window-below t)
+			 (evil-mode))
+	(use-package evil-collection
 		 :after evil
 		 :ensure t
 		 :config
 		 (evil-collection-init))
   #+end_src
+** The fabulous jk escape
+#+begin_src emacs-lisp
+  (use-package key-chord
+	:ensure t)
 
+  (setq key-chord-two-keys-delay 0.2)
+  (key-chord-define evil-insert-state-map "jk" 'evil-normal-state)
+  (key-chord-mode 1)
+#+end_src
 * Look and feel
 ** Welcome Screen
    Turning off the welcome screen
@@ -136,7 +144,7 @@
   | doom-zenburn                      | port of the popular Zenburn theme (thanks to jsoa)                                                   |
   Set the theme:
   #+begin_src emacs-lisp
-	(load-theme 'doom-dark+ t)
+	(load-theme 'doom-one t)
   #+end_src
 ** Fonts
   A nice font
@@ -215,9 +223,10 @@
    - Tab width is 4
    - Tabs instead of spaces (no expandtab)
    #+begin_src emacs-lisp
-     (setq-default c-basic-offset 4
-                   tab-width 4
-                   indent-tabs-mode 4)
+	 (setq-default c-basic-offset 4
+				   tab-width 4
+				   indent-tabs-mode 4
+				   c-default-style "bsd")
    #+end_src
 * Which key
   Helper buffer that shows the keybindings
@@ -284,21 +293,70 @@
        (interactive-haskell-mode 1))
      (add-hook 'haskell-mode-hook 'my/haskell-mode/turn-on-interactive)
    #+end_src
-* Org mode
-** Org-tempo
-   Source code tag expansion
+* LSP mode & setup
+  Language Server Protocol for different languages.
+  - Rust: rust-analyzer, use [[https://robert.kra.hn/posts/rust-emacs-setup/#lsp-mode-and-lsp-ui-mode][this link]] to install it.
+  - C / C++
+  - Java
+
+  Installing LSP mode.
+  #+begin_src emacs-lisp
+	(use-package lsp-mode
+	  :ensure t
+	  :commands (lsp lsp-deferred)
+	  :init
+	  (setq lsp-keymap-prefix "C-c l")
+	  :custom
+	  (lsp-rust-analyzer-server-display-inlay-hints t)
+	  (lsp-rust-analyzer-display-lifetime-elision-hints-enable "skip_trivial")
+	  (lsp-rust-analyzer-display-chaining-hints t)
+	  (lsp-rust-analyzer-display-lifetime-elision-hints-use-parameter-names nil)
+	  (lsp-rust-analyzer-display-closure-return-type-hints t)
+	  (lsp-rust-analyzer-display-parameter-hints nil)
+	  (lsp-rust-analyzer-display-reborrow-hints nil)
+	  :config
+	  (lsp-enable-which-key-integration t))
+  #+end_src
+** Set rust server
    #+begin_src emacs-lisp
-        (use-package org-tempo
-        :ensure nil)
+	 (setq lsp-rust-server 'rust-analyzer)
    #+end_src
-** Table of Contents
-   Automatically create the toc
+* Rust mode
+** Install
+   Rust mode supports cargo, rustc and other QoL stuff
    #+begin_src emacs-lisp
-     (use-package toc-org
-       :commands toc-org-enable
-       :init (add-hook 'org-mode-hook 'toc-org-enable))
+	 (use-package rustic
+	   :hook (rustic . lsp-deferred)
+	   :ensure t)
+
+	 (add-hook 'rustic-hook
+			   (lambda ()
+				 (setq indent-tabs-mode nil)
+				 (unless buffer-file-name
+				   (setq-local buffer-save-without-query))))
+
    #+end_src
 
+* Compilation
+  Let C-c C-c run the compile command in c and c++ modes.
+
+#+begin_src emacs-lisp
+  (add-hook 'c-mode-hook
+			(lambda ()
+			  (local-set-key (kbd "C-c C-c") 'compile)))
+  (add-hook 'c++-mode-hook
+			(lambda ()
+			  (local-set-key (kbd "C-c C-c") 'compile)))
+#+end_src
+* Org mode
+** Org babel
+   Creating some compile functions for common languages.
+   #+begin_src emacs-lisp
+	 (org-babel-do-load-languages
+	  'org-babel-load-languages
+	  '((emacs-lisp . t)
+		(shell . t)))
+   #+end_src
 * Magit
 ** Installation
   The magit interactive git client
@@ -317,3 +375,42 @@
      (global-set-key (kbd "C-x g") 'magit-status)
    #+end_src
    
+* Autocomplete
+** Base autocompletion
+Install autocomplete mode.
+#+begin_src emacs-lisp
+  ;; (use-package auto-complete
+  ;;   :ensure t
+  ;;   :init
+  ;;   (progn
+  ;; 	(ac-config-default)
+  ;; 	(global-auto-complete-mode t)))
+
+  (use-package company
+	:ensure t
+	:after lsp-mode
+	:hook (lsp-mode . company-mode)
+	:bind
+	(:map company-active-map
+		  ("<tab>" . company-complete-selection))
+	(:map lsp-mode-map
+		  ("<tab>" . company-indent-or-complete-common))
+	:config
+	(setq company-idle-delay 0)
+	(setq company-minimum-prefix-length 3)
+	(global-company-mode t))
+#+end_src
+** Irony-mode: advanced C/C++ autocompletion
+
+#+begin_src emacs-lisp
+  (use-package company-irony
+	:ensure t
+	:config
+	(add-to-list 'company-backends 'company-irony))
+  (use-package irony
+	:ensure t
+	:config
+	(add-hook 'c++-mode-hook 'irony-mode)
+	(add-hook 'c-mode-hook 'irony-mode)
+	(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+#+end_src
