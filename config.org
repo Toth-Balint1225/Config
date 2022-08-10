@@ -1,4 +1,4 @@
-#+TITLE: Personal Emacs config based on DT's video
+#+TITLE: Personal Emacs config 
 #+AUTHOR: Tóth Bálint
 
 * Basics
