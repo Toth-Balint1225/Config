@@ -1,0 +1,57 @@
+Config { font = "xft:UbuntuMono Nerd Font:pixelsize=16:antialias=true:hinting=true"
+       , additionalFonts = []
+       , borderColor = "black"
+       , border = TopB
+       , bgColor = "#282A36"
+       , fgColor = "grey"
+       , alpha = 255
+       , position = Top
+       , textOffset = -1
+       , iconOffset = -1
+       , lowerOnStart = True
+       , pickBroadest = False
+       , persistent = False
+       , hideOnStart = False
+       , iconRoot = "/home/toth/.config/xmobar/icons/"
+       , allDesktops = True
+       , overrideRedirect = True
+       , commands = [  
+	                --   Run Network "eth0" ["-L","0","-H","32",
+                    --                    "--normal","green","--high","red"] 60
+                    -- , Run Network "eth1" ["-L","0","-H","32",
+                    --                    "--normal","green","--high","red"] 10
+                    Run DynNetwork     [ "--template" , "  <tx>kB/s|<rx>kB/s"  -- default: <dev>:
+                                                 , "--Low"      , "1000"       -- units: B/s
+                                                 , "--High"     , "5000"       -- units: B/s
+                                                 , "--low"      , "darkgreen"
+                                                 , "--normal"   , "darkorange"
+                                                 , "--high"     , "darkred"
+                                                 ] 10
+                    , Run Cpu ["--template"," <total>%","-L","3","-H","50",
+                               "--normal","green","--high","red"] 10
+                    , Run Memory ["-t","  <usedratio>%"] 10
+                    -- , Run Swap [] 10
+                    -- , Run Com "uname" ["-s","-r"] "" 36000
+                    , Run Date "%Y %b %_d %H:%M" "date" 10
+                    , Run Battery        [ "--template" , "  <acstatus>"
+                                                        , "--Low"      , "10"        -- units: %
+                                                        , "--High"     , "80"        -- units: %
+                                                        , "--low"      , "darkred"
+                                                        , "--normal"   , "darkorange"
+                                                        , "--high"     , "darkgreen"
+                                                        , "--" -- battery specific options
+													    -- discharging status
+													    -- , "-o"   , "<left>% (<timeleft>)"
+                                                        , "-o"   , "<left>%"
+													    -- AC "on" status
+													    , "-O"   , "<fc=#dAA520>Charging</fc>"
+													    -- charged status
+													    , "-i"   , "<fc=#006000>Charged</fc>"
+                                         ] 50
+				    , Run Com "/bin/bash" ["-c", "~/.config/xmobar/get_volume.sh"]  "myvolume" 1
+					, Run UnsafeStdinReader
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = "<action=`$HOME/.xmonad/applauncher.sh`><icon=haskell-20-alpha.xpm/></action> | <action=`nemo`> </action> | <action=`firefox`> </action> | <action=`cinnamon-settings sound`>ﰝ </action> | <action=`cinnamon-settings network`>ﯱ </action> | <action=`cinnamon-settings` button=1>  </action> } %UnsafeStdinReader% { <action=`~/.config/xmobar/shutdown_manager.sh`> </action> | 奄 %myvolume% | %battery% | %cpu% | %memory% | %dynnetwork% | <fc=#ee9a00>%date%</fc>"
+       }
